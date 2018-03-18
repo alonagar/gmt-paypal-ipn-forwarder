@@ -15,34 +15,24 @@
 
 require_once( plugin_dir_path( __FILE__ ) . 'options.php' );
 
-function gmt_paypal_ipn_forwarder( $posted ) {
-
+function WC_paypal_ipn_forwarder( $caller ) {
+// this is not a Paypal request, quite
+	if ($caller != 'wc_gateway_paypal') {
+		return true;
+	}
     $options = gmt_paypal_ipn_forwarder_get_theme_options();
-
 	// Broadcast
 	foreach ( $options['urls'] as $url ) {
-		wp_remote_post( trim( esc_url_raw( $url ) ), array(
-				'timeout' => 150,
-				'httpversion' => '1.1',
-                'blocking' => false,
-				'body' => $posted,
-		    )
-		);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 1500);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($_POST));
+		$data = curl_exec($ch);
+		curl_close($ch);
 	}
 
 }
-add_action( 'paypal_ipn_for_wordpress_ipn_response_handler', 'gmt_paypal_ipn_forwarder', 10, 1 );
+add_action( 'woocommerce_api_request', 'WC_paypal_ipn_forwarder', 10, 1 );
 
-
-// Check that PayPal IPN is installed
-function gmt_paypal_ipn_forwarder_required_plugins_admin_notice() {
-
-    // PayPal Framework
-    if ( !class_exists( 'AngellEYE_Paypal_Ipn_For_Wordpress' ) ) :
-    ?>
-    <div class="notice notice-error"><p><strong>Warning!</strong> PayPal IPN Forwarder requires the <a href="https://wordpress.org/plugins/paypal-ipn/">PayPal IPN for WordPress</a> plugin. Please install it immediately.</p></div>
-    <?php
-    endif;
-
-}
-add_action( 'admin_notices', 'gmt_paypal_ipn_forwarder_required_plugins_admin_notice' );
