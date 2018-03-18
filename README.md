@@ -1,8 +1,5 @@
 # PayPal IPN Forwarder
-Forward PayPal IPN to multiple other IPN services in WordPress. Extends [PayPal IPN for WordPress](https://wordpress.org/plugins/paypal-ipn/). Inspired by [Shawn Gaffney](https://gist.github.com/anointed/3805698).
-
-[Download PayPal IPN Forwarder](https://github.com/cferdinandi/paypal-ipn-forwarder/archive/master.zip)
-
+Forward PayPal IPN to multiple other IPN services in WooCommerce, based on https://github.com/cferdinandi/gmt-paypal-ipn-forwarder
 
 
 ## Getting Started
@@ -16,13 +13,6 @@ Getting started with PayPal IPN Forwarder is as simple as installing a plugin:
 And that's it, you're done. Nice work!
 
 It's recommended that you also install the [GitHub Updater plugin](https://github.com/afragen/github-updater) to get automatic updates.
-
-
-
-## How to Contribute
-
-Please read the [Contribution Guidelines](CONTRIBUTING.md).
-
 
 
 ## License
